@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-        stage('Deploy NGINX Load Balancer') {
+        stage('Deploy NGINX') {
             steps {
                 sh '''
                 docker rm -f nginx-lb || true
@@ -34,9 +34,6 @@ pipeline {
                   --network app-network \
                   -p 80:80 \
                   nginx
-
-                docker cp nginx/default.conf nginx-lb:/etc/nginx/conf.d/default.conf
-                docker exec nginx-lb nginx -s reload
                 '''
             }
         }
@@ -44,10 +41,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline executed successfully. NGINX load balancer is running.'
+            echo 'Pipeline executed successfully.'
         }
         failure {
-            echo 'Pipeline failed. Check console logs for errors.'
+            echo 'Pipeline failed. Check console logs.'
         }
     }
 }
